@@ -5,7 +5,7 @@ MyLearning
 
   1. CoreDNS is a DNS server. It is written in Go.
   2. Widely used as the default DNS provider in Kubernetes clusters, created as a replacement for kube-dns in K8s.
-  3. Each plugin provides specific features, like forwarding, caching, or health checking.
+  3. CireDNS is highly flexiblae and customisable as each plugins used in CoreDNS provides specific features, like forwarding, caching, or health checking.
   4. Built to handle significant traffic with minimal resource usage, CoreDNS provides rapid DNS responses suitable for dynamic and high-traffic environments.
   5. CoreDNS configuration is done via a simple configuration file (Corefile), allowing flexible setup and management of DNS zones, upstream resolvers, and specific plugins.
    
