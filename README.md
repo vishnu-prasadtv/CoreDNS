@@ -22,11 +22,30 @@ MyLearning
    As mentioned before CoreDNS is used as DNS provider in Kubernetes clusters, Let us understand how domain name resolution works in Kubernetes
 
    - Within Kubernetes, when a Pod needs to access a Service in the same Namespace, all it needs to do is execute：
-          `# curl aa-svc`
+
+     ``# curl pod1-svc ``
 
    - But what if the target is in a different namespace? In such cases, you need to include the domain as follows：
-          `# curl aa-svc.domain`
-       
+
+      ``# curl pod1-svc.domain``
+
+   So when the service name of a pod outside namespace has to be resolved, the DNS resolution is required. 
+   Generally for DNS resolution, below files are used in Linux:
+   
+     /etc/hosts.conf
+     /etc/hosts 
+     /etc/resolv.conf
+      
+In Kubernetes CoreDNS make use of four DNS policies for resolution, particularly in handling the relationship between internal and external DNS queries:
+
+  1. **Default**: This policy lets kubelet determine which DNS policy to use, with the default being to use the `resolv.conf` content from the Node. 
+  
+  2. **ClusterFirst**: This policy prioritizes using Kubernetes' internal DNS service (specifically CoreDNS) for DNS resolution within Pods. 
+  
+  3. **ClusterFirstWithHostNet**: When a Pod uses `hostNetwork: true`, it directly adopts the `resolv.conf` contents from the Node. 
+  
+  4. **None**: This policy doesn't specify a DNS policy, allowing you to customize DNS configuration using dnsConfig.
+
 Reference: https://weng-albert.medium.com/coredns-basic-troubleshooting-resolving-common-issues-en-07c18cd7f8fe
 
    
