@@ -162,6 +162,41 @@ In Kubernetes CoreDNS make use of four DNS policies for resolution, particularly
   ```
 
 
+## Configuration
+
+There are various pieces that can be configured in CoreDNS. The first is determining which plugins you want to compile into CoreDNS. The binaries we provide have all plugins, as listed in plugin.cfg, compiled in. Adding or removing is easy, but requires a recompile of CoreDNS.
+
+Thus most users use the Corefile to configure CoreDNS. When CoreDNS starts, and the -conf flag is not given, it will look for a file named Corefile in the current directory. That file consists of one or more Server Blocks. Each Server Block lists one or more Plugins. Those Plugins may be further configured with Directives.
+
+The ordering of the Plugins in the Corefile does not determine the order of the plugin chain. The order in which the plugins are executed is determined by the ordering in plugin.cfg.
+
+Comments in a Corefile are started with a #. The rest of the line is then considered a comment.
+
+
+## Testing
+
+Once you have a coredns binary, you can use the -plugins flag to list all the compiled plugins. Without a Corefile (See Configuration) CoreDNS will load the whoami plugin that will respond with the IP address and port of the client. So to test, we start CoreDNS to run on port 1053 and send it a query using dig:
+```
+$ ./coredns -dns.port=1053
+.:1053
+2018/02/20 10:40:44 [INFO] CoreDNS-1.0.5
+2018/02/20 10:40:44 [INFO] linux/amd64, go1.10,
+CoreDNS-1.0.5
+linux/amd64, go1.10,
+```
+And from a different terminal window, a dig should return something similar to this:
+```
+$ dig @localhost -p 1053 a whoami.example.org
+
+;; QUESTION SECTION:
+;whoami.example.org.		IN	A
+
+;; ADDITIONAL SECTION:
+whoami.example.org.	0	IN	AAAA	::1
+_udp.whoami.example.org. 0	IN	SRV	0 0 39368 .
+```
+
+
 ## References: 
 https://weng-albert.medium.com/coredns-basic-troubleshooting-resolving-common-issues-en-07c18cd7f8fe
 https://coredns.io/2017/07/23/corefile-explained/
